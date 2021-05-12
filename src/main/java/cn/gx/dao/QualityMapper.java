@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 public interface QualityMapper {
     //质检
     Integer qualityControl(Quality quality);
+    //test
 }
