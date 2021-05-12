@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cn.gx.dao.ProductMapper">
+    <resultMap id="product" type="cn.cn.gx.entity.Product">
+        <id property="id" column="id"/>
+        <result property="productName" column="productName"/>
+        <result property="productDate" column="productDate"/>
+        <result property="productSum" column="productSum"/>
+        <result property="productDesc" column="productDesc"/>
+        <result property="productPrice" column="productPrice"/>
+        <association property="quality" javaType="cn.cn.gx.entity.Quality">
+            <id property="id" column="id"/>
+            <result property="score" column="score"/>
+            <result property="qualityDesc" column="qualityDesc"/>
+        </association>
+    </resultMap>
+    <select id="queryBypName" resultMap="product">
+        SELECT p.id,
+        p.productName,
+        p.productDate,
+        p.productSum,
+        p.productDesc,
+        p.productPrice,
+        q.score,
+        q.qualityDesc
+        FROM products p,
+        qualities q
+        WHERE p.id = q.productId
+        <if test="null!=productName">
+            AND productName LIKE CONCAT('%',#{productName},'%')
+        </if>
+    </select>
+    <select id="queryById" resultMap="product">
+        SELECT p.id,
+               p.productName,
+               p.productDate,
+               p.productSum,
+               p.productDesc,
+               p.productPrice,
+               q.score,
+               q.qualityDesc
+        FROM products p,
+             qualities q
+        WHERE p.id = q.productId
+          and p.id = #{id}
+    </select>
+    <update id="update">
+        UPDATE
+        products
+        <set>
+            <if test="null!=productName">productName = #{productName},</if>
+            <if test="null!=productDate">productDate = #{productDate},</if>
+            <if test="null!=productSum">productSum = #{productSum},</if>
+            <if test="null!=productDesc">productDesc = #{productDesc},</if>
+            <if test="null!=productPrice">productPrice = #{productPrice}</if>
+        </set>
+        WHERE id = #{id};
+    </update>
+</mapper>
